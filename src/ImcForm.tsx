@@ -1,5 +1,5 @@
-import axios from "axios";
 import React, { useState } from "react";
+import { calcularImc } from "./service/ImcService";
 
 interface ImcResult {
   imc: number;
@@ -25,10 +25,7 @@ function ImcForm() {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/imc/calcular", {
-        altura: alturaNum,
-        peso: pesoNum,
-      });
+      const response = await calcularImc(alturaNum, pesoNum);
       setResultado(response.data);
       setError("");
     } catch (err) {
@@ -79,7 +76,6 @@ function ImcForm() {
           </div>
         )}
       </div>
-      
     </div>
   );
 }
