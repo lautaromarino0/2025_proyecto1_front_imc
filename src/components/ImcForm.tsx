@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { calcularImc } from "./service/ImcService";
+import { calcularImc } from "../service/ImcService";
 
 interface ImcResult {
   imc: number;
@@ -20,6 +20,11 @@ function ImcForm() {
 
     if (isNaN(alturaNum) || isNaN(pesoNum) || alturaNum <= 0 || pesoNum <= 0) {
       setError("Por favor, ingresa valores válidos (positivos y numéricos).");
+      setResultado(null);
+      return;
+    }
+    else if (alturaNum >= 3 || pesoNum >= 500) {
+      setError("Por favor, ingresa valores válidos: Altura max 3m Peso max 500kg.");
       setResultado(null);
       return;
     }
