@@ -1,41 +1,12 @@
 import { useState } from 'react';
-import jwt_decode from 'jwt-decode';
-import ImcForm from './components/ImcForm';
-import ImcHistory from './components/ImcHistory';
+import { AuthProvider, useAuth } from './service/AuthService';
 import Login from './components/Login';
 import Register from './components/Register';
+import ImcContainer from './components/ImcContainer';
 
-
-const App: React.FC = () => {
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
-  const [userId, setUserId] = useState<number | null>(() => {
-    const storedToken = localStorage.getItem('token');
-    if (!storedToken) return null;
-    try {
-      const decoded: any = jwt_decode(storedToken);
-      return decoded.sub ? Number(decoded.sub) : null;
-    } catch {
-      return null;
-    }
-  });
+const AppContent: React.FC = () => {
+  const { token, userId, login, logout } = useAuth();
   const [showRegister, setShowRegister] = useState(false);
-
-  const handleLogin = (token: string) => {
-    setToken(token);
-    localStorage.setItem('token', token);
-    try {
-      const decoded: any = jwt_decode(token);
-      setUserId(decoded.sub ? Number(decoded.sub) : null);
-    } catch {
-      setUserId(null);
-    }
-  };
-
-  const handleLogout = () => {
-    setToken(null);
-    setUserId(null);
-    localStorage.removeItem('token');
-  };
 
   if (!token || !userId) {
     return (
@@ -47,7 +18,7 @@ const App: React.FC = () => {
           </>
         ) : (
           <>
-            <Login onLogin={handleLogin} />
+            <Login onLogin={login} />
             <button onClick={() => setShowRegister(true)}>¿No tienes cuenta? Regístrate</button>
           </>
         )}
@@ -57,13 +28,16 @@ const App: React.FC = () => {
 
   return (
     <div>
-      <button onClick={handleLogout}>Cerrar sesión</button>
-      <h1>Calculadora de IMC</h1>
-      <ImcForm />
-      <h2>Historial de IMC</h2>
-  <ImcHistory />
+      <button onClick={logout}>Cerrar sesión</button>
+      <ImcContainer/>
     </div>
   );
 };
+
+const App: React.FC = () => (
+  <AuthProvider>
+    <AppContent/>
+  </AuthProvider>
+);
 
 export default App;

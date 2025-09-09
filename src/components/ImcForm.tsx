@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { calcularImc } from "../service/ImcService";
-
-interface ImcResult {
-  imc: number;
-  categoria: string;
-}
+import { ImcContext } from "./ImcProvider";
 
 function ImcForm() {
+
+  const context = useContext(ImcContext);
+  if (!context) {
+    throw new Error("ImcForm must be used within an ImcProvider");
+  }
+
+  const { setResultado, setError } = context;
+
   const [altura, setAltura] = useState("");
   const [peso, setPeso] = useState("");
-  const [resultado, setResultado] = useState<ImcResult | null>(null);
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +33,7 @@ function ImcForm() {
 
     try {
       const response = await calcularImc(alturaNum, pesoNum);
-      setResultado(response.data);
+      setResultado({imc: response.data.imc, categoria: response.data.categoria});
       setError("");
     } catch (err) {
       setError(
@@ -67,19 +69,6 @@ function ImcForm() {
           </div>
           <button type="submit">Calcular</button>
         </form>
-
-        {resultado && (
-          <div>
-            <p>IMC: {resultado.imc.toFixed(2)}</p>
-            <p>Categoría: {resultado.categoria}</p>
-          </div>
-        )}
-
-        {error && (
-          <div>
-            <p>{error}</p>
-          </div>
-        )}
       </div>
     </div>
   );

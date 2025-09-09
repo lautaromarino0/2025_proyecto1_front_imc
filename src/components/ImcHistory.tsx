@@ -20,7 +20,9 @@ const ImcHistory: React.FC = () => {
   if (!history.length) return <div>No hay historial de IMC.</div>;
 
   return (
-    <table>
+    <div>
+      <h2>Historial de IMC</h2>
+      <table>
       <thead>
         <tr>
           <th>Fecha</th>
@@ -33,7 +35,7 @@ const ImcHistory: React.FC = () => {
       <tbody>
         {history.map((item) => (
           <tr key={item.id}>
-            <td>{new Date(item.fecha).toLocaleString()}</td>
+            <td>{new Date(item.fecha).toLocaleString().slice(0, 10)}</td>
             <td>{item.peso}</td>
             <td>{item.altura}</td>
             <td>{item.imc}</td>
@@ -41,7 +43,8 @@ const ImcHistory: React.FC = () => {
           </tr>
         ))}
       </tbody>
-    </table>
+      </table>
+    </div>
   );
 };
 
