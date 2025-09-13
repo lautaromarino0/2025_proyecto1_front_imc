@@ -3,7 +3,6 @@ import { calcularImc } from "../service/ImcService";
 import { ImcContext } from "./ImcProvider";
 
 function ImcForm() {
-
   const context = useContext(ImcContext);
   if (!context) {
     throw new Error("ImcForm must be used within an ImcProvider");
@@ -17,23 +16,49 @@ function ImcForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const errores: string[] = [];
+    // Validación estricta de número: solo dígitos, opcional punto y decimales
+    const numeroValido = /^\d*\.?\d+$/;
+
+    if (!numeroValido.test(peso)) {
+      errores.push(
+        "Por favor, ingresa valores válidos (numéricos) para el peso."
+      );
+    }
+    if (!numeroValido.test(altura)) {
+      errores.push(
+        "Por favor, ingresa valores válidos (numéricos) para la altura."
+      );
+    }
+
     const alturaNum = parseFloat(altura);
     const pesoNum = parseFloat(peso);
 
-    if (isNaN(alturaNum) || isNaN(pesoNum) || alturaNum <= 0 || pesoNum <= 0) {
-      setError("Por favor, ingresa valores válidos (positivos y numéricos).");
-      setResultado(null);
-      return;
+    if (numeroValido.test(altura) && alturaNum <= 0) {
+      errores.push("La altura debe ser un número positivo mayor a 0 metros.");
     }
-    else if (alturaNum >= 3 || pesoNum >= 500) {
-      setError("Por favor, ingresa valores válidos: Altura max 3m Peso max 500kg.");
+    if (numeroValido.test(peso) && pesoNum <= 0) {
+      errores.push("El peso debe ser un número positivo mayor a 0 kg.");
+    }
+    if (numeroValido.test(altura) && alturaNum >= 3) {
+      errores.push("Por favor, ingresa valores válidos: altura máxima 3 m.");
+    }
+    if (numeroValido.test(peso) && pesoNum >= 500) {
+      errores.push("Por favor, ingresa valores válidos: peso máximo 500 kg.");
+    }
+
+    if (errores.length > 0) {
+      setError(errores.join("\n"));
       setResultado(null);
       return;
     }
 
     try {
       const response = await calcularImc(alturaNum, pesoNum);
-      setResultado({imc: response.data.imc, categoria: response.data.categoria});
+      setResultado({
+        imc: response.data.imc,
+        categoria: response.data.categoria,
+      });
       setError("");
     } catch (err) {
       setError(
@@ -51,21 +76,14 @@ function ImcForm() {
           <div>
             <label>Altura (m):</label>
             <input
-              type="number"
               value={altura}
               onChange={(e) => setAltura(e.target.value)}
               step="0.01"
-              min="0.1"
             />
           </div>
           <div>
             <label>Peso (kg):</label>
-            <input
-              type="number"
-              value={peso}
-              onChange={(e) => setPeso(e.target.value)}
-              min="1"
-            />
+            <input value={peso} onChange={(e) => setPeso(e.target.value)} />
           </div>
           <button type="submit">Calcular</button>
         </form>
