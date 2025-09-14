@@ -17,8 +17,8 @@ function ImcForm() {
     e.preventDefault();
 
     const errores: string[] = [];
-    // Validación estricta de número: solo dígitos, opcional punto y decimales
-    const numeroValido = /^\d*\.?\d+$/;
+    // Validación estricta de número: permite negativos, opcional punto y decimales
+    const numeroValido = /^-?\d*\.?\d+$/;
 
     if (!numeroValido.test(peso)) {
       errores.push(
@@ -74,16 +74,21 @@ function ImcForm() {
         <h1>Calculadora de IMC</h1>
         <form onSubmit={handleSubmit}>
           <div>
-            <label>Altura (m):</label>
+            <label htmlFor="altura">Altura (m):</label>
             <input
+              id="altura"
               value={altura}
               onChange={(e) => setAltura(e.target.value)}
               step="0.01"
             />
           </div>
           <div>
-            <label>Peso (kg):</label>
-            <input value={peso} onChange={(e) => setPeso(e.target.value)} />
+            <label htmlFor="peso">Peso (kg):</label>
+            <input
+              id="peso"
+              value={peso}
+              onChange={(e) => setPeso(e.target.value)}
+            />
           </div>
           <button type="submit">Calcular</button>
         </form>
