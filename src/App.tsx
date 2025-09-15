@@ -1,43 +1,21 @@
-import { useState } from 'react';
-import { AuthProvider, useAuth } from './service/AuthService';
-import Login from './components/Login';
-import Register from './components/Register';
-import ImcContainer from './components/ImcContainer';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import './index.css';
+import AuthPage from './pages/auth-page';
+import IMCPage from './pages/imc-page';
 
-const AppContent: React.FC = () => {
-  const { token, userId, login, logout } = useAuth();
-  const [showRegister, setShowRegister] = useState(false);
 
-  if (!token || !userId) {
-    return (
-      <div>
-        {showRegister ? (
-          <>
-            <Register onRegister={() => setShowRegister(false)} />
-            <button onClick={() => setShowRegister(false)}>¿Ya tienes cuenta? Inicia sesión</button>
-          </>
-        ) : (
-          <>
-            <Login onLogin={login} />
-            <button onClick={() => setShowRegister(true)}>¿No tienes cuenta? Regístrate</button>
-          </>
-        )}
-      </div>
-    );
-  }
+function App() {
 
   return (
-    <div>
-      <button onClick={logout}>Cerrar sesión</button>
-      <ImcContainer/>
-    </div>
-  );
-};
+    <Router>
+      <Routes>
 
-const App: React.FC = () => (
-  <AuthProvider>
-    <AppContent/>
-  </AuthProvider>
-);
+        <Route path="/" element={<AuthPage/>} />
+        <Route path="/calcular-imc" element={<IMCPage/>} />
+      
+      </Routes>
+    </Router>
+  )
+}
 
-export default App;
+export default App
