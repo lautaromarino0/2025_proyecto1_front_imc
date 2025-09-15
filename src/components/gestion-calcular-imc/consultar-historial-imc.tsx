@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { Clock, PlusCircle} from "lucide-react"
 import { ImcHistoryItem } from "../../interfaces/ImcHistoryItem.interface"
 import HistorialIMCService from "./historial-imc-service"
-import { formatCantidades, formatDate } from "../herramientas/formateo-campos/fucion-formateo"
+import { formatCantidades, formatDateISO } from "../herramientas/formateo-campos/fucion-formateo"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/Card"
 import { Button } from "../ui/Button"
 import { Column, TablaAGGrid } from "../herramientas/tablas/tabla-flexible-ag-grid"
@@ -54,7 +54,7 @@ export default function ConsultarHistorialIMC() {
       flex: 0.5,
       type: "text",
       editable: false,
-      formatFunction: ({ value }: { value: string }) => <span>{formatDate(value)}</span>
+      formatFunction: ({ value }: { value: string }) => <span>{formatDateISO(value)}</span>
       
     },
     {
