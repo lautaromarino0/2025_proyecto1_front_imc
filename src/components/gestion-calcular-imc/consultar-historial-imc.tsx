@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react"
-import { HeartPulse, PlusCircle, Tag} from "lucide-react"
+import { Clock, PlusCircle} from "lucide-react"
 import { ImcHistoryItem } from "../../interfaces/ImcHistoryItem.interface"
 import HistorialIMCService from "./historial-imc-service"
 import { formatCantidades, formatDate } from "../herramientas/formateo-campos/fucion-formateo"
@@ -97,43 +97,28 @@ export default function ConsultarHistorialIMC() {
   ]
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gradient-to-br from-emerald-100 via-white to-emerald-50">
-      <div className="w-full max-w-8xl p-6">
-        <div className="bg-white shadow-xl rounded-2xl p-8 border border-emerald-100">
-
-          {/* Ícono superior */}
-          <div className="flex justify-center mb-6">
-            <div className="bg-emerald-500 p-3 rounded-full shadow-md">
-              <HeartPulse className="h-8 w-8 text-white" />
+    <div className="w-full">
+      
+      <div className="p-8">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">Cargando historiales...</p>
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 max-w-md">
+              <p className="text-red-600 dark:text-red-400 text-center font-medium">{error}</p>
             </div>
           </div>
+        ) : (
+          <>            
 
-          {/* Título */}
-          <h1 className="text-2xl font-bold text-center text-emerald-700 mb-2">
-            Historial de IMC
-          </h1>
-          <p className="text-center text-gray-500 text-sm mb-6">
-            Consulta y gestiona tus registros de índice de masa corporal.
-          </p>
-
-          {/* Contenido */}
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500 mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-400 text-lg">Cargando historiales...</p>
-            </div>
-          ) : error ? (
-            <div className="flex flex-col items-center justify-center py-12">
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 max-w-md">
-                <p className="text-red-600 dark:text-red-400 text-center font-medium">{error}</p>
-              </div>
-            </div>
-          ) : (
-            <Card className="border-emerald-100 shadow-md">
+            <Card className="bg-white border-emerald-100 shadow-md">
               <CardHeader className="flex flex-row items-center justify-between p-4 gap-4">
                 <div className="flex items-center gap-6">
                   <CardTitle className="flex items-center space-x-2 text-emerald-700">
-                    <Tag className="consultar-icon text-emerald-500" />
+                    <Clock className="consultar-icon text-emerald-500" />
                     <span>Historial</span>
                   </CardTitle>
                 </div>
@@ -157,24 +142,23 @@ export default function ConsultarHistorialIMC() {
                 </div>
               </CardContent>
             </Card>
+
+            </>
           )}
         </div>
 
-        <p className="text-center text-xs text-gray-400 mt-6">
-          &copy; 2025 Sistema IMC. Vive saludable 🌱
-        </p>
-      </div>
-
-      {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-emerald-100">
-            <div className="p-6">
+        {/* Modales*/}
+        {isModalOpen && ( 
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="relative p-6 sm:p-8 rounded-lg shadow-lg w-4/5 sm:w-3/5 md:w-2/3 lg:w-1/2 xl:w-2/5 max-w-full">
               <CalcularIMC onClose={handleSuccess} />
             </div>
           </div>
-        </div>
-      )}
+        )}
+
     </div>
+
+    
   )
 }
+
