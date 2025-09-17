@@ -1,8 +1,8 @@
-import { HeartPulse, User} from "lucide-react"
+import { HeartPulse, User, BarChart2 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/DropDownMenu"
 import { Button } from "./ui/Button"
 import { cn } from "../utils/Utils"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { jwtDecode } from "jwt-decode"
 import { useState, useEffect } from "react"
 import { DecodedToken } from "./gestion-usuario/interfaces-validaciones-usuario"
@@ -84,12 +84,15 @@ export function Navbar({ className }: NavbarProps) {
           </div>
 
           <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+            <Link to="/estadisticas" className="flex items-center gap-1 px-3 py-2 rounded hover:bg-blue-800 transition-colors">
+              <BarChart2 className="h-5 w-5" />
+              <span className="hidden sm:inline">Estadísticas</span>
+            </Link>
             <div className="scale-75 sm:scale-90 md:scale-100">
               <ProfileButton />
             </div>
           </div>
         </div>
-
       </div>
     </header>
   )
